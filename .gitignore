@@ -1,0 +1,12 @@
+﻿# Runtime artefacts – do not commit
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+logs/
+call_logs/
+db_backups/
+oauth/
+server/
+supervisor/
+
+.env

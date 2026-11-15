@@ -1,0 +1,11 @@
+﻿{
+  "name": "Omni_Claude",
+  "description": "Free Claude combo – primary free model with fallback to a paid tier",
+  "models": [
+    { "provider": "anthropic", "model": "claude-3-5-sonnet-20240620", "tier": "free" },
+    { "provider": "anthropic", "model": "claude-3-opus-20240229", "tier": "paid" }
+  ],
+  "contextLimit": 128000,
+  "strategy": "fallback",
+  "fallbackOn": ["rate_limit", "quota_exhausted"]
+}

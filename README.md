@@ -56,7 +56,7 @@ If the repository does not yet exist on GitHub, perform step 0 first.
 @'
 STORAGE_ENCRYPTION_KEY=b81f3a27345449b216c4354d90307f7c05df56a14b7fb279b21d684ba55f28bb
 REQUIRE_API_KEY=true
-ANTHROPIC_AUTH_TOKEN=sk-f56178d215459c60-025cd1-1bde94f3   # <-- your real key
+ANTHROPIC_AUTH_TOKEN=<YOUR_API_KEY>   # <-- replace with your real key (do NOT commit)
 '@ | Set-Content -Path .env -Encoding UTF8
 ```
 The line above adds the key **only to your local copy**; `.gitignore` already prevents it from being tracked.

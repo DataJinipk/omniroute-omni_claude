@@ -36,13 +36,6 @@ omniroute/                     # repository root
 ---
 
 ## Step‑by‑Step Setup
-### 0️⃣ Create the remote repository (if not already present)
-```powershell
-# Using GitHub CLI (requires prior authentication)
-gh repo create datajinipk/omniroute-omni_claude --public --confirm
-```
-Or create the repository manually on GitHub and copy the HTTPS clone URL.
-
 ### 1️⃣ Clone the repository locally
 ```powershell
 cd $HOME\.gemini\antigravity\scratch   # or any preferred workspace
@@ -50,7 +43,7 @@ git clone https://github.com/datajinipk/omniroute-omni_claude.git
 cd omniroute-omni_claude
 ```
 
-### 2️⃣ Configure local secrets – **do not commit**
+### 2️⃣ Configure local secrets – **do not commit!**
 Create a `.env` file at the repository root with the following placeholders (the file is already ignored by `.gitignore`):
 ```powershell
 @'
@@ -103,15 +96,44 @@ Test a simple prompt to confirm the pipeline works without quota errors.
 
 ---
 
-## Maintaining the Repository
-- **Updating the combo**: Edit `config/omni_claude_combo.json` and commit the change.
-  ```powershell
-  git add config/omni_claude_combo.json
-  git commit -m "Update Omni_Claude combo configuration"
-  git push
-  ```
-- **Branching**: Use feature branches for extensive modifications and open a Pull Request for review.
-- **Release Tags**: Tag stable releases (`v1.0.0`, `v1.1.0`, …) to freeze a known‑good configuration.
+## Detailed Combo Setup
+
+The `omni_claude_combo.json` defines the combo as a JSON object. Below is a breakdown of each field and how to customize it:
+
+- `name`: Identifier for the combo. Must be unique within OmniRoute.
+- `description`: Human‑readable description.
+- `models`: Ordered list of model candidates. Each entry includes:
+  - `provider`: The provider name (e.g., `anthropic`).
+  - `model`: Exact model identifier as recognized by the provider.
+  - `tier`: Optional tag to indicate free vs paid models.
+- `contextLimit`: Maximum token context for the combo; adjust according to your use‑case.
+- `strategy`: How OmniRoute selects a model (`fallback` means try each in order until success).
+- `fallbackOn`: Error conditions that trigger the next model (e.g., `rate_limit`, `quota_exhausted`).
+
+### Adding or Replacing Models
+1. Locate the model identifiers in the provider’s documentation (e.g., Anthropic’s model catalog).
+2. Edit the `models` array, inserting or removing objects. Example to add a new free model:
+
+```json
+{ "provider": "anthropic", "model": "claude-3-haiku-20240307", "tier": "free" }
+```
+3. Save the file and re‑import via the OmniRoute dashboard (Combos → Import) or run:
+
+```powershell
+omniroute combo import --file config/omni_claude_combo.json
+```
+
+### Changing the Fallback Strategy
+- `strategy` can be set to `"fallback"` (default) or `"auto"` for OmniRoute‑driven selection.
+- Adjust `fallbackOn` to include other error codes, e.g., `"network_error"`.
+
+### Testing the Combo
+After editing, restart OmniRoute or reload the combo:
+
+```powershell
+omniroute combo reload Omni_Claude
+```
+Then send a test request (via cURL or your client) to verify the correct model is used.
 
 ---
 
